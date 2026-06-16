@@ -275,7 +275,7 @@ export const FALLBACK_TRACKS: Track[] = [
 ];
 
 // List of popular search queries to pull fresh charts/tracks when online
-const POPULAR_SEARCHES = [
+export const POPULAR_SEARCHES = [
   "Michael Jackson", "Queen", "Nirvana", "The Weeknd", "Coldplay", 
   "Billie Eilish", "Eminem", "Daft Punk", "Adele", "Harry Styles", 
   "Taylor Swift", "Bruno Mars", "Dua Lipa", "Ed Sheeran", "Drake",
@@ -345,29 +345,16 @@ export async function searchTracks(query: string): Promise<Track[]> {
 
 export async function getRandomTracks(count: number = 20): Promise<Track[]> {
   try {
-    // Select 3 random search queries from popular list to avoid overloading proxies
-    const queries = shuffleArray([...POPULAR_SEARCHES]).slice(0, 3);
-    const promises = queries.map(q => searchTracks(q).catch(() => []));
-    const searchResults = await Promise.all(promises);
+    const genericQueries = ["hits", "classics", "pop", "rock", "dance", "love", "top", "radio", "music", "best"];
+    const randomQuery = genericQueries[Math.floor(Math.random() * genericQueries.length)];
+    const tracks = await searchTracks(randomQuery);
     
-    // Flat map results, filter, and shuffle
-    const pool = shuffleArray(searchResults.flat());
-    
-    // De-duplicate by ID
-    const uniqueMap = new Map<number, Track>();
-    pool.forEach(t => uniqueMap.set(t.id, t));
-    
-    const uniqueTracks = Array.from(uniqueMap.values());
-    if (uniqueTracks.length >= count) {
-      return uniqueTracks.slice(0, count);
+    if (tracks && tracks.length > 0) {
+      return shuffleArray(tracks).slice(0, count);
     }
-    
-    // Fall back using local data if needed
-    const combined = [...uniqueTracks, ...shuffleArray([...FALLBACK_TRACKS])];
-    const finalUniqueMap = new Map<number, Track>();
-    combined.forEach(t => finalUniqueMap.set(t.id, t));
-    return Array.from(finalUniqueMap.values()).slice(0, count);
+    return shuffleArray([...FALLBACK_TRACKS]).slice(0, count);
   } catch (error) {
+    console.warn("getRandomTracks failed, using local database:", error);
     return shuffleArray([...FALLBACK_TRACKS]).slice(0, count);
   }
 }
