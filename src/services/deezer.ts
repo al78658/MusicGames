@@ -9,7 +9,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Billie Jean",
     artist: { id: 259, name: "Michael Jackson", picture_medium: "https://api.deezer.com/artist/259/image" },
     album: { id: 119606, title: "Thriller", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/e2a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-e.dzcdn.net/stream/c-e2f527a296d9980d922f3001f3f38058-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
     rank: 980000,
     release_date: "1982-11-30",
     genres: ["Pop", "R&B"]
@@ -19,7 +19,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Bohemian Rhapsody",
     artist: { id: 412, name: "Queen", picture_medium: "https://api.deezer.com/artist/412/image" },
     album: { id: 302127, title: "A Night at the Opera", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/68c8b6b27e8d24cbfa6c88f1abf6e246/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-c.dzcdn.net/stream/c-cc5c6c06a6c0c29f643f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
     rank: 990000,
     release_date: "1975-10-31",
     genres: ["Rock", "Classic Rock"]
@@ -29,7 +29,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Smells Like Teen Spirit",
     artist: { id: 143, name: "Nirvana", picture_medium: "https://api.deezer.com/artist/143/image" },
     album: { id: 136237, title: "Nevermind", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/a7c6691c28c8942b00572e946a6f6df6/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-2.dzcdn.net/stream/c-29b158021c33b00c3c6f9661448b4e33-7.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
     rank: 950000,
     release_date: "1991-09-24",
     genres: ["Rock", "Grunge"]
@@ -39,7 +39,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Hotel California",
     artist: { id: 251, name: "Eagles", picture_medium: "https://api.deezer.com/artist/251/image" },
     album: { id: 101438, title: "Hotel California", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/2e90c66d54cf8bf1ff4d1d8cf4e88dbb/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-d.dzcdn.net/stream/c-d9cf747fae3fbf2a05cf4c6f50567e91-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
     rank: 940000,
     release_date: "1976-12-08",
     genres: ["Rock", "Classic Rock"]
@@ -49,7 +49,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Blinding Lights",
     artist: { id: 4050205, name: "The Weeknd", picture_medium: "https://api.deezer.com/artist/4050205/image" },
     album: { id: 136123872, title: "After Hours", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/b4fbc9af4668ab9c76b91176b6274488/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-d.dzcdn.net/stream/c-d2c6b45d0c7f7d3a01ff61f9d6c38220-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
     rank: 995000,
     release_date: "2019-11-29",
     genres: ["Pop", "Synthpop"]
@@ -59,7 +59,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Shape of You",
     artist: { id: 384236, name: "Ed Sheeran", picture_medium: "https://api.deezer.com/artist/384236/image" },
     album: { id: 155554, title: "÷ (Divide)", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/19bb7d22dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-b.dzcdn.net/stream/c-b715694a5585b5463f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
     rank: 960000,
     release_date: "2017-01-06",
     genres: ["Pop"]
@@ -69,7 +69,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Poker Face",
     artist: { id: 145, name: "Lady Gaga", picture_medium: "https://api.deezer.com/artist/145/image" },
     album: { id: 132456, title: "The Fame", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/c5bf088eb198df9a0f3d9b4b0e8c89b8/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-e.dzcdn.net/stream/c-eb96ff7d296d9980d922f3001f3f38058-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
     rank: 910000,
     release_date: "2008-08-19",
     genres: ["Pop", "Dance"]
@@ -79,7 +79,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Viva La Vida",
     artist: { id: 75, name: "Coldplay", picture_medium: "https://api.deezer.com/artist/75/image" },
     album: { id: 245678, title: "Viva la Vida or Death and All His Friends", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/e32230cf8452e8250269ff225e8a7ff8/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-5.dzcdn.net/stream/c-5cf747fae3fbf2a05cf4c6f50567e91-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
     rank: 935000,
     release_date: "2008-06-12",
     genres: ["Rock", "Alternative"]
@@ -90,7 +90,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Enter Sandman",
     artist: { id: 1188, name: "Metallica", picture_medium: "https://api.deezer.com/artist/1188/image" },
     album: { id: 258902, title: "Metallica (Black Album)", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/98bb122dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-9.dzcdn.net/stream/c-9cf747fae3fbf2a05cf4c6f50567e91-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
     rank: 890000,
     release_date: "1991-07-30",
     genres: ["Metal", "Rock"]
@@ -100,7 +100,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Symphony of Destruction",
     artist: { id: 1290, name: "Megadeth", picture_medium: "https://api.deezer.com/artist/1290/image" },
     album: { id: 119599, title: "Countdown to Extinction", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/a4a8258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-d.dzcdn.net/stream/c-d8f527a296d9980d922f3001f3f38058-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
     rank: 820000,
     release_date: "1992-07-14",
     genres: ["Metal"]
@@ -110,7 +110,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Raining Blood",
     artist: { id: 1412, name: "Slayer", picture_medium: "https://api.deezer.com/artist/1412/image" },
     album: { id: 300127, title: "Reign in Blood", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/48c8b6b27e8d24cbfa6c88f1abf6e246/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-a.dzcdn.net/stream/c-ac5c6c06a6c0c29f643f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3",
     rank: 750000,
     release_date: "1986-10-07",
     genres: ["Metal"]
@@ -120,7 +120,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Madhouse",
     artist: { id: 1342, name: "Anthrax", picture_medium: "https://api.deezer.com/artist/1342/image" },
     album: { id: 145554, title: "Spreading the Disease", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/39bb7d22dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-f.dzcdn.net/stream/c-f715694a5585b5463f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
     rank: 700000,
     release_date: "1985-10-30",
     genres: ["Metal"]
@@ -131,7 +131,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Lose Yourself",
     artist: { id: 509, name: "Eminem", picture_medium: "https://api.deezer.com/artist/509/image" },
     album: { id: 5132456, title: "8 Mile", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/ec5bf08eb198df9a0f3d9b4b0e8c89b8/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-b.dzcdn.net/stream/c-bb96ff7d296d9980d922f3001f3f38058-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3",
     rank: 970000,
     release_date: "2002-10-28",
     genres: ["Hip-Hop", "Rap"]
@@ -141,7 +141,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Still D.R.E.",
     artist: { id: 624, name: "Dr. Dre", picture_medium: "https://api.deezer.com/artist/624/image" },
     album: { id: 8245678, title: "2001", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/832230cf8452e8250269ff225e8a7ff8/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-8.dzcdn.net/stream/c-8cf747fae3fbf2a05cf4c6f50567e91-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",
     rank: 955000,
     release_date: "1999-11-16",
     genres: ["Hip-Hop", "Rap"]
@@ -152,7 +152,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Stayin' Alive",
     artist: { id: 154, name: "Bee Gees", picture_medium: "https://api.deezer.com/artist/154/image" },
     album: { id: 390127, title: "Saturday Night Fever", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/58c8b6b27e8d24cbfa6c88f1abf6e246/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-4.dzcdn.net/stream/c-4c5c6c06a6c0c29f643f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
     rank: 920000,
     release_date: "1977-12-10",
     genres: ["Disco", "Pop"]
@@ -162,7 +162,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Dancing Queen",
     artist: { id: 180, name: "ABBA", picture_medium: "https://api.deezer.com/artist/180/image" },
     album: { id: 445554, title: "Arrival", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/29bb7d22dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-7.dzcdn.net/stream/c-7715694a5585b5463f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3",
     rank: 945000,
     release_date: "1976-08-15",
     genres: ["Pop", "Disco"]
@@ -173,7 +173,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Sweet Child O' Mine",
     artist: { id: 421, name: "Guns N' Roses", picture_medium: "https://api.deezer.com/artist/421/image" },
     album: { id: 690127, title: "Appetite for Destruction", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/f8c8b6b27e8d24cbfa6c88f1abf6e246/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-3.dzcdn.net/stream/c-3c5c6c06a6c0c29f643f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
     rank: 965000,
     release_date: "1987-07-21",
     genres: ["Rock", "Hard Rock"]
@@ -183,7 +183,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Livin' On A Prayer",
     artist: { id: 122, name: "Bon Jovi", picture_medium: "https://api.deezer.com/artist/122/image" },
     album: { id: 745554, title: "Slippery When Wet", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/e9bb7d22dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-1.dzcdn.net/stream/c-1715694a5585b5463f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
     rank: 930000,
     release_date: "1986-08-18",
     genres: ["Rock", "Hard Rock"]
@@ -194,7 +194,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "...Baby One More Time",
     artist: { id: 231, name: "Britney Spears", picture_medium: "https://api.deezer.com/artist/231/image" },
     album: { id: 890127, title: "...Baby One More Time", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/c8c8b6b27e8d24cbfa6c88f1abf6e246/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-e.dzcdn.net/stream/c-ec5c6c06a6c0c29f643f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
     rank: 915000,
     release_date: "1998-10-23",
     genres: ["Pop", "Dance"]
@@ -204,7 +204,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Wannabe",
     artist: { id: 301, name: "Spice Girls", picture_medium: "https://api.deezer.com/artist/301/image" },
     album: { id: 945554, title: "Spice", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/d9bb7d22dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-a.dzcdn.net/stream/c-a715694a5585b5463f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
     rank: 900000,
     release_date: "1996-06-26",
     genres: ["Pop", "Dance"]
@@ -215,7 +215,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "In The End",
     artist: { id: 981, name: "Linkin Park", picture_medium: "https://api.deezer.com/artist/981/image" },
     album: { id: 1090127, title: "Hybrid Theory", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/d2a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-5.dzcdn.net/stream/c-52f527a296d9980d922f3001f3f38058-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
     rank: 975000,
     release_date: "2000-10-24",
     genres: ["Rock", "Alternative"]
@@ -225,7 +225,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Mr. Brightside",
     artist: { id: 1111, name: "The Killers", picture_medium: "https://api.deezer.com/artist/1111/image" },
     album: { id: 1045554, title: "Hot Fuss", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/c9bb7d22dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-4.dzcdn.net/stream/c-4715694a5585b5463f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
     rank: 950000,
     release_date: "2003-09-29",
     genres: ["Rock", "Indie"]
@@ -236,7 +236,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Get Lucky",
     artist: { id: 812, name: "Daft Punk", picture_medium: "https://api.deezer.com/artist/812/image" },
     album: { id: 1190127, title: "Random Access Memories", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/0e2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-0.dzcdn.net/stream/c-02f527a296d9980d922f3001f3f38058-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
     rank: 940000,
     release_date: "2013-04-19",
     genres: ["Dance", "Disco"]
@@ -246,7 +246,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Rolling in the Deep",
     artist: { id: 388, name: "Adele", picture_medium: "https://api.deezer.com/artist/388/image" },
     album: { id: 1145554, title: "21", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/23bb7d22dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-3.dzcdn.net/stream/c-3715694a5585b5463f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
     rank: 960000,
     release_date: "2010-11-29",
     genres: ["Pop", "Soul"]
@@ -257,7 +257,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "As It Was",
     artist: { id: 123456, name: "Harry Styles", picture_medium: "https://api.deezer.com/artist/123456/image" },
     album: { id: 1290127, title: "Harry's House", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/e1a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-a.dzcdn.net/stream/c-a2f527a296d9980d922f3001f3f38058-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
     rank: 985000,
     release_date: "2022-04-01",
     genres: ["Pop", "Indie"]
@@ -267,7 +267,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Flowers",
     artist: { id: 824, name: "Miley Cyrus", picture_medium: "https://api.deezer.com/artist/824/image" },
     album: { id: 1245554, title: "Endless Summer Vacation", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/54bb7d22dc479b1dfad841efec3a5796/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-b.dzcdn.net/stream/c-b715694a5585b5463f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
     rank: 980000,
     release_date: "2023-01-12",
     genres: ["Pop"]
@@ -277,7 +277,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Back In Black",
     artist: { id: 124, name: "AC/DC", picture_medium: "https://api.deezer.com/artist/124/image" },
     album: { id: 1390127, title: "Back In Black", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/f2a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-c.dzcdn.net/stream/c-cc5c6c06a6c0c29f643f87b8d0092c2a-3.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3",
     rank: 975000,
     release_date: "1980-07-25",
     genres: ["Rock", "Hard Rock"]
@@ -287,7 +287,7 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Roar",
     artist: { id: 156, name: "Katy Perry", picture_medium: "https://api.deezer.com/artist/156/image" },
     album: { id: 1490127, title: "Prism", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/d2a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-d.dzcdn.net/stream/c-d2c6b45d0c7f7d3a01ff61f9d6c38220-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
     rank: 960000,
     release_date: "2013-09-05",
     genres: ["Pop"]
@@ -297,10 +297,9 @@ export const FALLBACK_TRACKS: Track[] = [
     title: "Three Little Birds",
     artist: { id: 178, name: "Bob Marley", picture_medium: "https://api.deezer.com/artist/178/image" },
     album: { id: 1590127, title: "Exodus", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/e2a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
-    preview: "https://cdns-preview-e.dzcdn.net/stream/c-e2f527a296d9980d922f3001f3f38058-4.mp3",
+    preview: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3",
     rank: 950000,
     release_date: "1977-06-03",
-    genres: ["Reggae"]
   }
 ];
 

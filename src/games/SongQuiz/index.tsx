@@ -4,30 +4,26 @@ import type { Track } from '../../types';
 import { AudioPlayer } from '../../components/AudioPlayer';
 import { ScoreDisplay } from '../../components/ScoreDisplay';
 import { useStats } from '../../contexts/StatsContext';
-import { HelpCircle, CheckCircle, XCircle, ArrowRight, Eye, Music, Radio, Flame, Sparkles } from 'lucide-react';
-
-const CATEGORIES = [
-  { id: 'all_time', name: 'All Time Bests', desc: 'Os maiores êxitos de sempre a nível global.', icon: Sparkles, genreId: 0 },
-  { id: 'rock', name: 'Rock & Metal', desc: 'Clássicos da guitarra, grunge, heavy metal e rock alternativo.', icon: Flame, genreId: 113 },
-  { id: 'pop', name: 'Pop & Dance', desc: 'As músicas pop mais cativantes e ritmos de pista de dança.', icon: Music, genreId: 132 },
-  { id: 'hiphop', name: 'Hip-Hop & Rap', desc: 'Grandes batidas, flow marcante e rimas clássicas.', icon: Radio, genreId: 116 }
-];
+import { HelpCircle, CheckCircle, XCircle, ArrowRight, Eye } from 'lucide-react';
 
 export const SongQuiz: React.FC = () => {
   const { recordGameResult } = useStats();
-  const [selectedCategory, setSelectedCategory] = useState<typeof CATEGORIES[0] | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [guess, setGuess] = useState('');
   const [hintsUsed, setHintsUsed] = useState<string[]>([]);
-  const [gameState, setGameState] = useState<'category_select' | 'playing' | 'answered' | 'ended'>('category_select');
+  const [gameState, setGameState] = useState<'playing' | 'answered' | 'ended'>('playing');
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [feedback, setFeedback] = useState<{ correct: boolean; message: string } | null>(null);
   const [seconds, setSeconds] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [audioError, setAudioError] = useState(false);
+
+  useEffect(() => {
+    loadGameData();
+  }, []);
 
   useEffect(() => {
     let interval: any;
@@ -39,10 +35,8 @@ export const SongQuiz: React.FC = () => {
     return () => clearInterval(interval);
   }, [timerActive, gameState]);
 
-  const handleSelectCategory = async (category: typeof CATEGORIES[0]) => {
-    setSelectedCategory(category);
+  const loadGameData = async () => {
     setLoading(true);
-    setGameState('playing');
     setScore(0);
     setStreak(0);
     setHintsUsed([]);
@@ -52,8 +46,8 @@ export const SongQuiz: React.FC = () => {
     setAudioError(false);
 
     try {
-      // Fetch tracks based on the category's genre ID
-      const fetched = await getChartTracks(category.genreId);
+      // Fetch tracks based on the category's genre ID (genreId 0 = All Time Bests)
+      const fetched = await getChartTracks(0);
       
       // Shuffle and take 5 tracks with unique artists
       const shuffled = filterUniqueArtists([...fetched].sort(() => Math.random() - 0.5), 5);
@@ -76,10 +70,9 @@ export const SongQuiz: React.FC = () => {
   };
 
   const handleReplaceTrack = async () => {
-    if (!selectedCategory) return;
     setLoading(true);
     try {
-      const fetched = await getChartTracks(selectedCategory.genreId);
+      const fetched = await getChartTracks(0);
       if (fetched && fetched.length > 0) {
         const ids = new Set(tracks.map(t => t.id));
         const newTrack = fetched.find(t => !ids.has(t.id)) || fetched[Math.floor(Math.random() * fetched.length)];
@@ -105,10 +98,10 @@ export const SongQuiz: React.FC = () => {
 
   const currentTrack = tracks[currentTrackIndex];
 
-  if (gameState !== 'category_select' && !currentTrack && !loading) {
+  if (!currentTrack && !loading) {
     return (
       <div className="text-center text-slate-400 py-12">
-        Nenhuma música disponível. Tente voltar ao menu.
+        Nenhuma música disponível. Tente reiniciar.
       </div>
     );
   }
@@ -199,45 +192,12 @@ export const SongQuiz: React.FC = () => {
     }
   };
 
-  const handleRestartCategorySelect = () => {
-    setSelectedCategory(null);
+  const handleRestart = () => {
     setTracks([]);
     setCurrentTrackIndex(0);
-    setGameState('category_select');
+    setGameState('playing');
+    loadGameData();
   };
-
-  if (gameState === 'category_select') {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
-        <div className="text-center mb-10">
-          <span className="text-xs uppercase tracking-wider text-slate-500">Novo Modo Principal</span>
-          <h1 className="text-3xl font-extrabold text-gradient mb-2">Desafio Temático</h1>
-          <p className="text-sm text-slate-400 max-w-md mx-auto">
-            Escolhe uma categoria ou estilo musical preferido e adivinha as faixas que vamos carregar diretamente da API.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {CATEGORIES.map(category => {
-            const Icon = category.icon;
-            return (
-              <button
-                key={category.id}
-                onClick={() => handleSelectCategory(category)}
-                className="glass-panel glass-panel-hover p-6 rounded-2xl border border-slate-850 text-left flex flex-col items-start"
-              >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white mb-4">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <h3 className="font-bold text-white text-lg mb-1">{category.name}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">{category.desc}</p>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
 
   if (loading) {
     return (
@@ -250,7 +210,7 @@ export const SongQuiz: React.FC = () => {
           <div className="absolute inset-4 rounded-full border border-dashed border-slate-700/30" />
           <div className="absolute inset-6 rounded-full border border-dashed border-slate-700/20" />
         </div>
-        <p className="text-slate-400 font-semibold animate-pulse text-sm">A carregar temas da categoria...</p>
+        <p className="text-slate-400 font-semibold animate-pulse text-sm">A carregar músicas de topo...</p>
       </div>
     );
   }
@@ -261,8 +221,8 @@ export const SongQuiz: React.FC = () => {
         score={score}
         maxScore={100}
         won={score >= 50}
-        onRestart={handleRestartCategorySelect}
-        message={`Terminaste o Desafio Temático em "${selectedCategory?.name}"! Fizeste uma grande pontuação.`}
+        onRestart={handleRestart}
+        message={`Terminaste o Desafio All Time Bests! Fizeste uma grande pontuação.`}
       />
     );
   }
@@ -271,8 +231,8 @@ export const SongQuiz: React.FC = () => {
     <div className="max-w-2xl mx-auto px-4 py-8 animate-fade-in">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <span className="text-xs uppercase tracking-wider text-slate-400">Categoria: {selectedCategory?.name}</span>
-          <h1 className="text-2xl font-extrabold text-blue-400">Desafio Temático</h1>
+          <span className="text-xs uppercase tracking-wider text-slate-400">Modo de Jogo</span>
+          <h1 className="text-2xl font-extrabold text-blue-400">All Time Bests</h1>
         </div>
         <div className="flex gap-4">
           <div className="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 text-center">

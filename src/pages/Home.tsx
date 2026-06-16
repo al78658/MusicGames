@@ -6,8 +6,8 @@ import { Music, Trophy, Play, Star, List, Calendar, Flame, Zap, RefreshCw, BarCh
 const GAME_MODES = [
   {
     id: 'song_quiz',
-    title: 'Desafio Temático',
-    description: 'Escolhe um tema (All Time Bests, Rock, Pop ou Hip-Hop) e adivinha as canções.',
+    title: 'All Time Bests',
+    description: 'Adivinha os maiores êxitos de sempre carregados diretamente da API.',
     color: 'from-blue-600 via-indigo-600 to-purple-600 text-indigo-400 border-indigo-500/20',
     icon: Sparkles,
     path: '/game/song-quiz'
