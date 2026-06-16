@@ -5,17 +5,20 @@ interface AudioPlayerProps {
   src: string;
   onPlayStateChange?: (isPlaying: boolean) => void;
   autoPlay?: boolean;
+  onAudioError?: () => void;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   src,
   onPlayStateChange,
-  autoPlay = false
+  autoPlay = false,
+  onAudioError
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -23,6 +26,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setIsPlaying(false);
     setCurrentTime(0);
     setDuration(0);
+    setHasError(false);
 
     if (audioRef.current) {
       audioRef.current.src = src;
@@ -42,7 +46,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [isPlaying, onPlayStateChange]);
 
   const togglePlay = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || hasError) return;
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
@@ -60,7 +64,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   };
 
   const restart = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || hasError) return;
     audioRef.current.currentTime = 0;
     setCurrentTime(0);
     audioRef.current.play()
@@ -83,6 +87,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
     setCurrentTime(0);
   };
 
+  const handleAudioError = () => {
+    setHasError(true);
+    setIsPlaying(false);
+    if (onAudioError) {
+      onAudioError();
+    }
+  };
+
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
@@ -96,13 +108,14 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={handleEnded}
+        onError={handleAudioError}
       />
 
       {/* Rotating Disc visual representation */}
       <div className="relative mb-6">
-        <div className={`w-36 h-36 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center shadow-lg relative overflow-hidden ${isPlaying ? 'animate-spin' : ''}`} style={{ animationDuration: '6s' }}>
+        <div className={`w-36 h-36 rounded-full bg-slate-900 border-4 ${hasError ? 'border-red-500/50' : 'border-slate-800'} flex items-center justify-center shadow-lg relative overflow-hidden ${isPlaying ? 'animate-spin' : ''}`} style={{ animationDuration: '6s' }}>
           {/* Record center */}
-          <div className="w-10 h-10 rounded-full bg-blue-500 border-2 border-slate-900 flex items-center justify-center z-10">
+          <div className={`w-10 h-10 rounded-full ${hasError ? 'bg-red-500' : 'bg-blue-500'} border-2 border-slate-900 flex items-center justify-center z-10`}>
             <div className="w-2 h-2 rounded-full bg-slate-900" />
           </div>
           {/* Groove lines */}
@@ -114,12 +127,19 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
         {/* Play/Pause Button Overlaid at bottom-right or center */}
         <button
           onClick={togglePlay}
-          className="absolute -bottom-2 right-1/2 translate-x-1/2 bg-blue-600 hover:bg-blue-500 text-white rounded-full p-4 shadow-xl hover:scale-105 active:scale-95 transition-all duration-200"
+          disabled={hasError}
+          className={`absolute -bottom-2 right-1/2 translate-x-1/2 ${hasError ? 'bg-red-650 cursor-not-allowed opacity-50' : 'bg-blue-600 hover:bg-blue-500'} text-white rounded-full p-4 shadow-xl hover:scale-105 active:scale-95 transition-all duration-200`}
           title={isPlaying ? "Pause" : "Play"}
         >
           {isPlaying ? <Pause className="w-6 h-6 fill-white" /> : <Play className="w-6 h-6 fill-white ml-0.5" />}
         </button>
       </div>
+
+      {hasError && (
+        <div className="w-full mb-2 p-2.5 bg-red-950/40 border border-red-500/20 text-red-300 rounded-xl text-center text-xs animate-pulse">
+          ⚠️ Não foi possível carregar a música.
+        </div>
+      )}
 
       {/* Track progress timeline */}
       <div className="w-full mt-4 flex flex-col gap-1.5">

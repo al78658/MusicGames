@@ -21,6 +21,7 @@ export const MusicDNA: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState<Array<{ track: Track; rating: string; score: number }>>([]);
   const [profile, setProfile] = useState<MusicDNAProfile | null>(null);
+  const [audioError, setAudioError] = useState(false);
 
   useEffect(() => {
     loadGameData();
@@ -31,6 +32,7 @@ export const MusicDNA: React.FC = () => {
     setAnswers([]);
     setProfile(null);
     setCurrentIndex(0);
+    setAudioError(false);
     // Fetch 8 tracks of varying genres/decades
     const fetched = await getRandomTracks(8);
     setTracks(fetched);
@@ -40,11 +42,29 @@ export const MusicDNA: React.FC = () => {
   const handleRateTrack = (ratingValue: string, ratingScore: number) => {
     const nextAnswers = [...answers, { track: tracks[currentIndex], rating: ratingValue, score: ratingScore }];
     setAnswers(nextAnswers);
+    setAudioError(false);
 
     if (currentIndex < tracks.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
       generateProfile(nextAnswers);
+    }
+  };
+
+  const handleReplaceTrack = async () => {
+    setLoading(true);
+    try {
+      const newTracks = await getRandomTracks(1);
+      if (newTracks && newTracks.length > 0) {
+        const updated = [...tracks];
+        updated[currentIndex] = newTracks[0];
+        setTracks(updated);
+        setAudioError(false);
+      }
+    } catch (err) {
+      console.error("Failed to replace track:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -287,7 +307,22 @@ export const MusicDNA: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-6">
-        <AudioPlayer src={currentTrack.preview} autoPlay={true} />
+        <AudioPlayer
+          src={currentTrack.preview}
+          autoPlay={true}
+          onAudioError={() => setAudioError(true)}
+        />
+
+        {audioError && (
+          <div className="flex justify-center -mt-2">
+            <button
+              onClick={handleReplaceTrack}
+              className="px-4 py-2 text-xs bg-slate-900/80 hover:bg-slate-800 border border-slate-850 text-blue-400 font-semibold rounded-xl transition-all duration-250 active:scale-95 flex items-center gap-1.5 shadow-md"
+            >
+              ⚠️ Áudio com erro? Substituir Música
+            </button>
+          </div>
+        )}
 
         <div className="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col items-center">
           <h3 className="text-lg font-bold text-slate-200 mb-2 text-center">

@@ -19,6 +19,7 @@ export const GuessArtist: React.FC = () => {
   const [feedback, setFeedback] = useState<{ correct: boolean; message: string } | null>(null);
   const [seconds, setSeconds] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [audioError, setAudioError] = useState(false);
 
   useEffect(() => {
     loadGameData();
@@ -46,8 +47,31 @@ export const GuessArtist: React.FC = () => {
     setFeedback(null);
     setGuess('');
     setSeconds(0);
+    setAudioError(false);
     setTimerActive(true);
     setLoading(false);
+  };
+
+  const handleReplaceTrack = async () => {
+    setLoading(true);
+    try {
+      const newTracks = await getRandomTracks(1);
+      if (newTracks && newTracks.length > 0) {
+        const updated = [...tracks];
+        updated[currentTrackIndex] = newTracks[0];
+        setTracks(updated);
+        setGuess('');
+        setHintsUsed([]);
+        setFeedback(null);
+        setSeconds(0);
+        setAudioError(false);
+        setTimerActive(true);
+      }
+    } catch (err) {
+      console.error("Failed to replace track:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const currentTrack = tracks[currentTrackIndex];
@@ -123,6 +147,7 @@ export const GuessArtist: React.FC = () => {
       setHintsUsed([]);
       setFeedback(null);
       setSeconds(0);
+      setAudioError(false);
       setGameState('playing');
       setTimerActive(true);
     } else {
@@ -189,7 +214,22 @@ export const GuessArtist: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-6">
-        <AudioPlayer src={currentTrack.preview} autoPlay={true} />
+        <AudioPlayer
+          src={currentTrack.preview}
+          autoPlay={true}
+          onAudioError={() => setAudioError(true)}
+        />
+
+        {audioError && gameState === 'playing' && (
+          <div className="flex justify-center -mt-2">
+            <button
+              onClick={handleReplaceTrack}
+              className="px-4 py-2 text-xs bg-slate-900/80 hover:bg-slate-800 border border-slate-850 text-indigo-400 font-semibold rounded-xl transition-all duration-250 active:scale-95 flex items-center gap-1.5 shadow-md"
+            >
+              ⚠️ Áudio com erro? Substituir Música
+            </button>
+          </div>
+        )}
 
         {/* Input area */}
         <div className="glass-panel p-6 rounded-2xl border border-slate-800">

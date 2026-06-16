@@ -271,6 +271,36 @@ export const FALLBACK_TRACKS: Track[] = [
     rank: 980000,
     release_date: "2023-01-12",
     genres: ["Pop"]
+  },
+  {
+    id: 1301290,
+    title: "Back In Black",
+    artist: { id: 124, name: "AC/DC", picture_medium: "https://api.deezer.com/artist/124/image" },
+    album: { id: 1390127, title: "Back In Black", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/f2a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
+    preview: "https://cdns-preview-c.dzcdn.net/stream/c-cc5c6c06a6c0c29f643f87b8d0092c2a-3.mp3",
+    rank: 975000,
+    release_date: "1980-07-25",
+    genres: ["Rock", "Hard Rock"]
+  },
+  {
+    id: 1401290,
+    title: "Roar",
+    artist: { id: 156, name: "Katy Perry", picture_medium: "https://api.deezer.com/artist/156/image" },
+    album: { id: 1490127, title: "Prism", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/d2a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
+    preview: "https://cdns-preview-d.dzcdn.net/stream/c-d2c6b45d0c7f7d3a01ff61f9d6c38220-4.mp3",
+    rank: 960000,
+    release_date: "2013-09-05",
+    genres: ["Pop"]
+  },
+  {
+    id: 1501290,
+    title: "Three Little Birds",
+    artist: { id: 178, name: "Bob Marley", picture_medium: "https://api.deezer.com/artist/178/image" },
+    album: { id: 1590127, title: "Exodus", cover_medium: "https://e-cdns-images.dzcdn.net/images/cover/e2a2ba258e2eeef4d350d75a840c83a0/250x250-000000-80-0-0.jpg" },
+    preview: "https://cdns-preview-e.dzcdn.net/stream/c-e2f527a296d9980d922f3001f3f38058-4.mp3",
+    rank: 950000,
+    release_date: "1977-06-03",
+    genres: ["Reggae"]
   }
 ];
 
@@ -279,7 +309,11 @@ export const POPULAR_SEARCHES = [
   "Michael Jackson", "Queen", "Nirvana", "The Weeknd", "Coldplay", 
   "Billie Eilish", "Eminem", "Daft Punk", "Adele", "Harry Styles", 
   "Taylor Swift", "Bruno Mars", "Dua Lipa", "Ed Sheeran", "Drake",
-  "David Bowie", "Led Zeppelin", "AC/DC", "Beatles", "Pink Floyd"
+  "David Bowie", "Led Zeppelin", "AC/DC", "Beatles", "Pink Floyd",
+  "Bob Marley", "Katy Perry", "Shakira", "Rihanna", "Lady Gaga",
+  "Linkin Park", "Red Hot Chili Peppers", "Guns N' Roses", "Bon Jovi",
+  "Metallica", "Beyonce", "Avicii", "Calvin Harris", "Maroon 5",
+  "Green Day", "Gorillaz", "Britney Spears", "Kanye West"
 ];
 
 // Helper to use CORS proxies for Deezer APIs
@@ -345,12 +379,37 @@ export async function searchTracks(query: string): Promise<Track[]> {
 
 export async function getRandomTracks(count: number = 20): Promise<Track[]> {
   try {
-    const genericQueries = ["hits", "classics", "pop", "rock", "dance", "love", "top", "radio", "music", "best"];
-    const randomQuery = genericQueries[Math.floor(Math.random() * genericQueries.length)];
-    const tracks = await searchTracks(randomQuery);
+    const searchPool = [
+      ...POPULAR_SEARCHES,
+      "hits", "classics", "pop", "rock", "dance", "love", "best",
+      "reggae", "80s", "90s", "2000s", "alternative", "disco", "indie"
+    ];
     
-    if (tracks && tracks.length > 0) {
-      return shuffleArray(tracks).slice(0, count);
+    // Pick two random query terms
+    const q1 = searchPool[Math.floor(Math.random() * searchPool.length)];
+    let q2 = searchPool[Math.floor(Math.random() * searchPool.length)];
+    while (q2 === q1) {
+      q2 = searchPool[Math.floor(Math.random() * searchPool.length)];
+    }
+
+    const tracks1 = await searchTracks(q1);
+    let tracks2: Track[] = [];
+    try {
+      // Fetch second query sequentially
+      tracks2 = await searchTracks(q2);
+    } catch (e) {
+      console.warn("Second search query failed", e);
+    }
+
+    const combined = [...tracks1, ...tracks2];
+    
+    // Filter duplicates
+    const uniqueTracksMap = new Map<number, Track>();
+    combined.forEach(t => uniqueTracksMap.set(t.id, t));
+    const uniqueTracks = Array.from(uniqueTracksMap.values());
+
+    if (uniqueTracks.length > 0) {
+      return shuffleArray(uniqueTracks).slice(0, count);
     }
     return shuffleArray([...FALLBACK_TRACKS]).slice(0, count);
   } catch (error) {
