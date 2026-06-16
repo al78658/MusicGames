@@ -348,9 +348,12 @@ export const IncrementalChallenge: React.FC = () => {
           {gameState === 'answered' && (
             <div className="mt-6 flex gap-4 items-center animate-fade-in p-4 bg-slate-900/40 rounded-xl border border-slate-800">
               <img
-                src={currentTrack.album.cover_medium}
+                src={currentTrack.album.cover_medium || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e293b'/><circle cx='50' cy='50' r='40' fill='%230f172a' stroke='%23334155' stroke-width='2'/><circle cx='50' cy='50' r='15' fill='%236366f1'/><circle cx='50' cy='50' r='4' fill='%230f172a'/></svg>"}
                 alt={currentTrack.album.title}
                 className="w-16 h-16 rounded-lg object-cover shadow-md"
+                onError={(e) => {
+                  e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e293b'/><circle cx='50' cy='50' r='40' fill='%230f172a' stroke='%23334155' stroke-width='2'/><circle cx='50' cy='50' r='15' fill='%236366f1'/><circle cx='50' cy='50' r='4' fill='%230f172a'/></svg>";
+                }}
               />
               <div>
                 <h4 className="font-bold text-white text-base">{currentTrack.title}</h4>

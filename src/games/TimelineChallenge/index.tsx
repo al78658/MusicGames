@@ -6,6 +6,7 @@ import { useStats } from '../../contexts/StatsContext';
 import { Calendar, ArrowUp, ArrowDown, Check, HelpCircle } from 'lucide-react';
 
 export const TimelineChallenge: React.FC = () => {
+  const DEFAULT_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e293b'/><circle cx='50' cy='50' r='40' fill='%230f172a' stroke='%23334155' stroke-width='2'/><circle cx='50' cy='50' r='15' fill='%23f59e0b'/><circle cx='50' cy='50' r='4' fill='%230f172a'/></svg>";
   const { recordGameResult } = useStats();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [shuffledTracks, setShuffledTracks] = useState<Track[]>([]);
@@ -178,9 +179,12 @@ export const TimelineChallenge: React.FC = () => {
                 </div>
 
                 <img
-                  src={track.album.cover_medium}
+                  src={track.album.cover_medium || DEFAULT_COVER}
                   alt={track.album.title}
                   className="w-14 h-14 rounded-lg object-cover shadow-sm pointer-events-none"
+                  onError={(e) => {
+                    e.currentTarget.src = DEFAULT_COVER;
+                  }}
                 />
 
                 <div className="flex-1 min-w-0">

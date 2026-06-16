@@ -6,6 +6,7 @@ import { useStats } from '../../contexts/StatsContext';
 import { Flame, ArrowUp, ArrowDown, Check, HelpCircle, Play, Pause } from 'lucide-react';
 
 export const PopularityRanking: React.FC = () => {
+  const DEFAULT_COVER = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e293b'/><circle cx='50' cy='50' r='40' fill='%230f172a' stroke='%23334155' stroke-width='2'/><circle cx='50' cy='50' r='15' fill='%23ec4899'/><circle cx='50' cy='50' r='4' fill='%230f172a'/></svg>";
   const { recordGameResult } = useStats();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [shuffledTracks, setShuffledTracks] = useState<Track[]>([]);
@@ -213,9 +214,12 @@ export const PopularityRanking: React.FC = () => {
                   title="Click to play preview"
                 >
                   <img
-                    src={track.album.cover_medium}
+                    src={track.album.cover_medium || DEFAULT_COVER}
                     alt={track.album.title}
                     className="w-full h-full object-cover pointer-events-none"
+                    onError={(e) => {
+                      e.currentTarget.src = DEFAULT_COVER;
+                    }}
                   />
                   <div className={`absolute inset-0 bg-slate-950/60 flex items-center justify-center transition-opacity ${isPlaying ? 'opacity-100' : 'opacity-0 group-hover/btn:opacity-100'}`}>
                     {isPlaying ? (

@@ -359,7 +359,15 @@ export async function resolveTracksPreviews(tracks: Track[]): Promise<Track[]> {
               if (match && match.preview) {
                 return {
                   ...track,
-                  preview: match.preview
+                  preview: match.preview,
+                  album: {
+                    ...track.album,
+                    cover_medium: match.album?.cover_medium || track.album.cover_medium
+                  },
+                  artist: {
+                    ...track.artist,
+                    picture_medium: match.artist?.picture_medium || track.artist.picture_medium
+                  }
                 };
               }
             }
