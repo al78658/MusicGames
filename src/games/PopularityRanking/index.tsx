@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getRandomTracks } from '../../services/deezer';
 import type { Track } from '../../types';
 import { ScoreDisplay } from '../../components/ScoreDisplay';
 import { useStats } from '../../contexts/StatsContext';
-import { Flame, ArrowUp, ArrowDown, Check, HelpCircle } from 'lucide-react';
+import { Flame, ArrowUp, ArrowDown, Check, HelpCircle, Play, Pause } from 'lucide-react';
 
 export const PopularityRanking: React.FC = () => {
   const { recordGameResult } = useStats();
@@ -13,15 +13,28 @@ export const PopularityRanking: React.FC = () => {
   const [gameState, setGameState] = useState<'playing' | 'answered' | 'ended'>('playing');
   const [score, setScore] = useState(0);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  
+  // Audio playback state
+  const [playingTrackId, setPlayingTrackId] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     loadGameData();
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
   }, []);
 
   const loadGameData = async () => {
     setLoading(true);
     setGameState('playing');
     setScore(0);
+    setPlayingTrackId(null);
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
 
     // Fetch 5 random tracks
     const fetched = await getRandomTracks(5);
@@ -37,6 +50,20 @@ export const PopularityRanking: React.FC = () => {
     }
     setShuffledTracks(shuffled);
     setLoading(false);
+  };
+
+  const togglePlayTrack = (trackId: number, previewUrl: string) => {
+    if (!audioRef.current) return;
+    
+    if (playingTrackId === trackId) {
+      audioRef.current.pause();
+      setPlayingTrackId(null);
+    } else {
+      audioRef.current.src = previewUrl;
+      audioRef.current.play()
+        .then(() => setPlayingTrackId(trackId))
+        .catch(err => console.error("Error playing track:", err));
+    }
   };
 
   const moveItem = (index: number, direction: 'up' | 'down') => {
@@ -75,6 +102,10 @@ export const PopularityRanking: React.FC = () => {
 
   const checkRanking = () => {
     setGameState('answered');
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setPlayingTrackId(null);
 
     // Score based on distance/correlation or simple match
     let correctCount = 0;
@@ -116,6 +147,9 @@ export const PopularityRanking: React.FC = () => {
 
   return (
     <div className="max-w-xl mx-auto px-4 py-8 animate-fade-in">
+      {/* Hidden audio element */}
+      <audio ref={audioRef} onEnded={() => setPlayingTrackId(null)} />
+
       <div className="flex justify-between items-center mb-8">
         <div>
           <span className="text-xs uppercase tracking-wider text-slate-400">Modo de Jogo</span>
@@ -131,7 +165,7 @@ export const PopularityRanking: React.FC = () => {
         <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex items-start gap-3">
           <HelpCircle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-slate-300 leading-relaxed">
-            Ordena as músicas da mais popular/ouvida (topo) para a menos popular (fundo), de acordo com os dados da API Deezer. Arrasta os cartões ou usa as setas. Clica em "Verificar Popularidade" quando terminares.
+            Ordena as músicas da mais popular/ouvida (topo) para a menos popular (fundo), de acordo com os dados da API Deezer. Clica na capa de qualquer música para ouvir um preview. Arrasta os cartões ou usa as setas para ordenar.
           </p>
         </div>
 
@@ -140,6 +174,7 @@ export const PopularityRanking: React.FC = () => {
           {shuffledTracks.map((track, index) => {
             const isCorrectAnswer = gameState === 'answered' && track.id === tracks[index].id;
             const originalPosition = tracks.findIndex(t => t.id === track.id);
+            const isPlaying = playingTrackId === track.id;
             
             return (
               <div
@@ -163,11 +198,26 @@ export const PopularityRanking: React.FC = () => {
                   {index + 1}
                 </div>
 
-                <img
-                  src={track.album.cover_medium}
-                  alt={track.album.title}
-                  className="w-14 h-14 rounded-lg object-cover shadow-sm pointer-events-none"
-                />
+                {/* Album Cover with Play/Pause triggers */}
+                <button
+                  type="button"
+                  onClick={() => togglePlayTrack(track.id, track.preview)}
+                  className="relative w-14 h-14 rounded-lg overflow-hidden group/btn flex-shrink-0 cursor-pointer border border-slate-850 shadow-md"
+                  title="Click to play preview"
+                >
+                  <img
+                    src={track.album.cover_medium}
+                    alt={track.album.title}
+                    className="w-full h-full object-cover pointer-events-none"
+                  />
+                  <div className={`absolute inset-0 bg-slate-950/60 flex items-center justify-center transition-opacity ${isPlaying ? 'opacity-100' : 'opacity-0 group-hover/btn:opacity-100'}`}>
+                    {isPlaying ? (
+                      <Pause className="w-5 h-5 text-white fill-white animate-pulse" />
+                    ) : (
+                      <Play className="w-5 h-5 text-white fill-white ml-0.5" />
+                    )}
+                  </div>
+                </button>
 
                 <div className="flex-grow min-w-0">
                   <h4 className="font-bold text-sm text-white truncate pointer-events-none">{track.title}</h4>

@@ -312,27 +312,29 @@ export async function searchTracks(query: string): Promise<Track[]> {
   try {
     const data = await fetchWithProxy(`https://api.deezer.com/search?q=${encodeURIComponent(query)}`);
     if (data && Array.isArray(data.data)) {
-      return data.data.map((track: any) => ({
-        id: track.id,
-        title: track.title,
-        title_short: track.title_short,
-        artist: {
-          id: track.artist.id,
-          name: track.artist.name,
-          picture_medium: track.artist.picture_medium
-        },
-        album: {
-          id: track.album.id,
-          title: track.album.title,
-          cover_medium: track.album.cover_medium
-        },
-        preview: track.preview,
-        duration: track.duration,
-        rank: track.rank,
-        // Approximate release date and genres from fallback database if available, or generate values
-        release_date: getReleaseDateForArtist(track.artist.name, track.title),
-        genres: getGenresForArtist(track.artist.name)
-      }));
+      return data.data
+        .filter((track: any) => track.preview && typeof track.preview === 'string' && track.preview.trim() !== '')
+        .map((track: any) => ({
+          id: track.id,
+          title: track.title,
+          title_short: track.title_short,
+          artist: {
+            id: track.artist.id,
+            name: track.artist.name,
+            picture_medium: track.artist.picture_medium
+          },
+          album: {
+            id: track.album.id,
+            title: track.album.title,
+            cover_medium: track.album.cover_medium
+          },
+          preview: track.preview,
+          duration: track.duration,
+          rank: track.rank,
+          // Approximate release date and genres from fallback database if available, or generate values
+          release_date: getReleaseDateForArtist(track.artist.name, track.title),
+          genres: getGenresForArtist(track.artist.name)
+        }));
     }
     return getFallbackTracksByQuery(query);
   } catch (error) {
