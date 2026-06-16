@@ -95,9 +95,9 @@ export const GuessArtist: React.FC = () => {
 
     let pointsGained = 0;
     if (isCorrect) {
-      const timeDeduction = Math.min(seconds * 2, 50);
-      const hintDeduction = hintsUsed.length * 20;
-      pointsGained = Math.max(10, 100 - timeDeduction - hintDeduction);
+      const timeDeduction = Math.min(seconds * 0.4, 10);
+      const hintDeduction = hintsUsed.length * 4;
+      pointsGained = Math.max(2, Math.round(20 - timeDeduction - hintDeduction));
       
       setScore(prev => prev + pointsGained);
       setStreak(prev => prev + 1);
@@ -129,7 +129,7 @@ export const GuessArtist: React.FC = () => {
       setGameState('ended');
       recordGameResult(
         'guess_artist',
-        score > 200,
+        score >= 50,
         score,
         streak,
         seconds
@@ -150,8 +150,8 @@ export const GuessArtist: React.FC = () => {
     return (
       <ScoreDisplay
         score={score}
-        maxScore={500}
-        won={score >= 250}
+        maxScore={100}
+        won={score >= 50}
         onRestart={loadGameData}
         message={`Terminaste o desafio Adivinha o Artista! Sabes mesmo quem canta as tuas músicas favoritas.`}
       />

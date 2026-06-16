@@ -31,8 +31,8 @@ export const MusicDNA: React.FC = () => {
     setAnswers([]);
     setProfile(null);
     setCurrentIndex(0);
-    // Fetch 8 tracks of varying genres/decades
-    const fetched = await getRandomTracks(8);
+    // Fetch 25 tracks of varying genres/decades
+    const fetched = await getRandomTracks(25);
     setTracks(fetched);
     setLoading(false);
   };

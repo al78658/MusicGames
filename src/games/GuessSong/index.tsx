@@ -95,9 +95,9 @@ export const GuessSong: React.FC = () => {
 
     let pointsGained = 0;
     if (isCorrect) {
-      const timeDeduction = Math.min(seconds * 2, 50);
-      const hintDeduction = hintsUsed.length * 20;
-      pointsGained = Math.max(10, 100 - timeDeduction - hintDeduction);
+      const timeDeduction = Math.min(seconds * 0.4, 10);
+      const hintDeduction = hintsUsed.length * 4;
+      pointsGained = Math.max(2, Math.round(20 - timeDeduction - hintDeduction));
       
       setScore(prev => prev + pointsGained);
       setStreak(prev => prev + 1);
@@ -130,7 +130,7 @@ export const GuessSong: React.FC = () => {
       // Save stats
       recordGameResult(
         'guess_song',
-        score > 200, // Win threshold of 200 pts
+        score >= 50, // Win threshold of 50 pts
         score,
         streak,
         seconds
@@ -151,8 +151,8 @@ export const GuessSong: React.FC = () => {
     return (
       <ScoreDisplay
         score={score}
-        maxScore={500}
-        won={score >= 250}
+        maxScore={100}
+        won={score >= 50}
         onRestart={loadGameData}
         message={`Terminaste o desafio Adivinha a Música! Conseguiste acertar na sequência e marcar pontos.`}
       />

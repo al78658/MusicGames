@@ -82,7 +82,7 @@ export const MusicConnections: React.FC = () => {
       setSelectedIds([]);
       setFeedback(`Excelente! Encontraste o grupo: "${groups[firstGroupId].name}"`);
       
-      const newScore = score + 100;
+      const newScore = score + 25;
       setScore(newScore);
 
       // Check if all groups solved
@@ -135,7 +135,7 @@ export const MusicConnections: React.FC = () => {
     return (
       <ScoreDisplay
         score={score}
-        maxScore={400}
+        maxScore={100}
         won={won}
         onRestart={loadGameData}
         message={

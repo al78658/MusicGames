@@ -75,9 +75,8 @@ export const GuessDecade: React.FC = () => {
 
     let pointsGained = 0;
     if (isCorrect) {
-      // Speed bonus: max 50 points, decreased by response time
-      const speedBonus = Math.max(10, 50 - seconds * 3);
-      pointsGained = 50 + speedBonus;
+      const speedBonus = Math.max(2, 10 - seconds * 0.6);
+      pointsGained = Math.round(10 + speedBonus);
       
       const newStreak = streak + 1;
       setStreak(newStreak);
@@ -110,7 +109,7 @@ export const GuessDecade: React.FC = () => {
       setGameState('ended');
       recordGameResult(
         'guess_decade',
-        score > 300,
+        score >= 50,
         score,
         maxStreak,
         seconds
@@ -131,8 +130,8 @@ export const GuessDecade: React.FC = () => {
     return (
       <ScoreDisplay
         score={score}
-        maxScore={500}
-        won={score >= 300}
+        maxScore={100}
+        won={score >= 50}
         onRestart={loadGameData}
         message={`Fim do Desafio Guess the Decade! Conseguiste adivinhar a época das canções com precisão.`}
       />
