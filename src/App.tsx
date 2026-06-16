@@ -9,7 +9,6 @@ import { TimelineChallenge } from './games/TimelineChallenge';
 import { PopularityRanking } from './games/PopularityRanking';
 import { GuessDecade } from './games/GuessDecade';
 import { MusicDNA } from './games/MusicDNA';
-import { SongQuiz } from './games/SongQuiz';
 import { Music, ArrowLeft } from 'lucide-react';
 
 const Header: React.FC = () => {
@@ -36,7 +35,7 @@ const Header: React.FC = () => {
               to="/"
               className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1 bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-800 transition"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+               <ArrowLeft className="w-3.5 h-3.5" />
               Voltar ao Menu
             </Link>
           } />
@@ -73,7 +72,6 @@ function App() {
               <Route path="/game/popularity-ranking" element={<PopularityRanking />} />
               <Route path="/game/guess-decade" element={<GuessDecade />} />
               <Route path="/game/music-dna" element={<MusicDNA />} />
-              <Route path="/game/song-quiz" element={<SongQuiz />} />
             </Routes>
           </main>
           <Footer />
