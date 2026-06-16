@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getRandomTracks, searchTracks } from '../../services/deezer';
+import { getRandomTracks, searchTracks, filterUniqueArtists } from '../../services/deezer';
 import type { Track } from '../../types';
 import { AudioPlayer } from '../../components/AudioPlayer';
 import { ScoreDisplay } from '../../components/ScoreDisplay';
@@ -55,8 +55,8 @@ export const SongQuiz: React.FC = () => {
       // Fetch tracks based on the category's query
       const fetched = await searchTracks(category.query);
       
-      // Shuffle and take 5 tracks
-      const shuffled = [...fetched].sort(() => Math.random() - 0.5).slice(0, 5);
+      // Shuffle and take 5 tracks with unique artists
+      const shuffled = filterUniqueArtists([...fetched].sort(() => Math.random() - 0.5), 5);
       
       if (shuffled.length > 0) {
         setTracks(shuffled);

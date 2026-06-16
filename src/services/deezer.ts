@@ -319,8 +319,8 @@ export const POPULAR_SEARCHES = [
 // Helper to use CORS proxies for Deezer APIs
 // Try multiple free CORS proxies in order of reliability
 const PROXIES = [
-  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`
+  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
 ];
 
 async function fetchWithProxy(url: string): Promise<any> {
@@ -377,6 +377,31 @@ export async function searchTracks(query: string): Promise<Track[]> {
   }
 }
 
+export function filterUniqueArtists(tracks: Track[], count: number): Track[] {
+  const unique: Track[] = [];
+  const seen = new Set<string>();
+  
+  for (const track of tracks) {
+    const artistName = track.artist.name.toLowerCase().trim();
+    if (!seen.has(artistName)) {
+      seen.add(artistName);
+      unique.push(track);
+    }
+    if (unique.length === count) break;
+  }
+  
+  if (unique.length < count) {
+    for (const track of tracks) {
+      if (!unique.some(t => t.id === track.id)) {
+        unique.push(track);
+      }
+      if (unique.length === count) break;
+    }
+  }
+  
+  return unique;
+}
+
 export async function getRandomTracks(count: number = 20): Promise<Track[]> {
   try {
     const searchPool = [
@@ -409,12 +434,12 @@ export async function getRandomTracks(count: number = 20): Promise<Track[]> {
     const uniqueTracks = Array.from(uniqueTracksMap.values());
 
     if (uniqueTracks.length > 0) {
-      return shuffleArray(uniqueTracks).slice(0, count);
+      return filterUniqueArtists(shuffleArray(uniqueTracks), count);
     }
-    return shuffleArray([...FALLBACK_TRACKS]).slice(0, count);
+    return filterUniqueArtists(shuffleArray([...FALLBACK_TRACKS]), count);
   } catch (error) {
     console.warn("getRandomTracks failed, using local database:", error);
-    return shuffleArray([...FALLBACK_TRACKS]).slice(0, count);
+    return filterUniqueArtists(shuffleArray([...FALLBACK_TRACKS]), count);
   }
 }
 
