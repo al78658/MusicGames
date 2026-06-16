@@ -342,6 +342,41 @@ async function fetchWithProxy(url: string): Promise<any> {
   throw lastError || new Error("Failed to fetch with all proxies");
 }
 
+export async function resolveTracksPreviews(tracks: Track[]): Promise<Track[]> {
+  try {
+    const resolved = await Promise.all(
+      tracks.map(async (track) => {
+        if (track.preview && track.preview.includes('soundhelix.com')) {
+          try {
+            // Search for the specific song by artist and title to get a real Deezer preview link
+            const query = `artist:"${track.artist.name}" track:"${track.title}"`;
+            const data = await fetchWithProxy(`https://api.deezer.com/search?q=${encodeURIComponent(query)}`);
+            if (data && Array.isArray(data.data) && data.data.length > 0) {
+              const match = data.data.find(
+                (t: any) => t.preview &&
+                t.artist.name.toLowerCase().trim() === track.artist.name.toLowerCase().trim()
+              ) || data.data[0];
+              if (match && match.preview) {
+                return {
+                  ...track,
+                  preview: match.preview
+                };
+              }
+            }
+          } catch (e) {
+            console.warn(`Failed to resolve preview for ${track.artist.name} - ${track.title}:`, e);
+          }
+        }
+        return track;
+      })
+    );
+    return resolved;
+  } catch (err) {
+    console.error("Error in resolveTracksPreviews:", err);
+    return tracks;
+  }
+}
+
 export async function searchTracks(query: string): Promise<Track[]> {
   try {
     const data = await fetchWithProxy(`https://api.deezer.com/search?q=${encodeURIComponent(query)}`);
@@ -370,10 +405,12 @@ export async function searchTracks(query: string): Promise<Track[]> {
           genres: getGenresForArtist(track.artist.name)
         }));
     }
-    return getFallbackTracksByQuery(query);
+    const fallback = getFallbackTracksByQuery(query);
+    return await resolveTracksPreviews(fallback);
   } catch (error) {
     console.warn("Deezer search failed, falling back to local database.", error);
-    return getFallbackTracksByQuery(query);
+    const fallback = getFallbackTracksByQuery(query);
+    return await resolveTracksPreviews(fallback);
   }
 }
 
@@ -410,10 +447,12 @@ export async function getChartTracks(genreId: number): Promise<Track[]> {
           genres: getGenresForArtist(track.artist?.name || '')
         }));
     }
-    return shuffleArray([...FALLBACK_TRACKS]).slice(0, 15);
+    const fallback = shuffleArray([...FALLBACK_TRACKS]).slice(0, 15);
+    return await resolveTracksPreviews(fallback);
   } catch (error) {
     console.warn(`Deezer chart fetch failed for ${genreId}, falling back`, error);
-    return shuffleArray([...FALLBACK_TRACKS]).slice(0, 15);
+    const fallback = shuffleArray([...FALLBACK_TRACKS]).slice(0, 15);
+    return await resolveTracksPreviews(fallback);
   }
 }
 
@@ -455,10 +494,12 @@ export async function getRandomTracks(count: number = 20): Promise<Track[]> {
     if (tracks && tracks.length > 0) {
       return filterUniqueArtists(shuffleArray(tracks), count);
     }
-    return filterUniqueArtists(shuffleArray([...FALLBACK_TRACKS]), count);
+    const fallback = filterUniqueArtists(shuffleArray([...FALLBACK_TRACKS]), count);
+    return await resolveTracksPreviews(fallback);
   } catch (error) {
     console.warn("getRandomTracks failed, using local database:", error);
-    return filterUniqueArtists(shuffleArray([...FALLBACK_TRACKS]), count);
+    const fallback = filterUniqueArtists(shuffleArray([...FALLBACK_TRACKS]), count);
+    return await resolveTracksPreviews(fallback);
   }
 }
 

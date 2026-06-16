@@ -6,13 +6,15 @@ interface AudioPlayerProps {
   onPlayStateChange?: (isPlaying: boolean) => void;
   autoPlay?: boolean;
   onAudioError?: () => void;
+  maxDuration?: number;
 }
 
 export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   src,
   onPlayStateChange,
   autoPlay = false,
-  onAudioError
+  onAudioError,
+  maxDuration = 15 // Default to 15 seconds snippet
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -51,6 +53,10 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      // If we are at the end of the snippet, restart before playing
+      if (maxDuration && audioRef.current.currentTime >= maxDuration) {
+        audioRef.current.currentTime = 0;
+      }
       audioRef.current.play()
         .then(() => setIsPlaying(true))
         .catch(err => console.error(err));
@@ -74,12 +80,21 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   const handleTimeUpdate = () => {
     if (!audioRef.current) return;
-    setCurrentTime(audioRef.current.currentTime);
+    const current = audioRef.current.currentTime;
+    if (maxDuration && current >= maxDuration) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = maxDuration;
+      setCurrentTime(maxDuration);
+      setIsPlaying(false);
+    } else {
+      setCurrentTime(current);
+    }
   };
 
   const handleLoadedMetadata = () => {
     if (!audioRef.current) return;
-    setDuration(audioRef.current.duration || 30); // Previews are typically 30s
+    const audioDuration = audioRef.current.duration || 30;
+    setDuration(maxDuration ? Math.min(audioDuration, maxDuration) : audioDuration);
   };
 
   const handleEnded = () => {
