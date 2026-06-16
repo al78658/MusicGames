@@ -13,6 +13,13 @@ const CATEGORIES = [
   { id: 'hiphop', name: 'Hip-Hop & Rap', desc: 'Grandes batidas, flow marcante e rimas clássicas.', icon: Radio, query: 'rap' }
 ];
 
+const CATEGORY_ARTISTS: Record<string, string[]> = {
+  all_time: ["Michael Jackson", "Queen", "Nirvana", "Adele", "Coldplay", "The Weeknd", "Harry Styles", "Taylor Swift", "Bruno Mars", "Ed Sheeran", "David Bowie", "Led Zeppelin", "AC/DC", "Beatles", "Pink Floyd"],
+  rock: ["AC/DC", "Metallica", "Queen", "Nirvana", "Guns N' Roses", "Linkin Park", "Led Zeppelin", "Pink Floyd", "Bon Jovi", "Red Hot Chili Peppers", "Green Day", "Gorillaz", "Scorpions"],
+  pop: ["Katy Perry", "Taylor Swift", "Ed Sheeran", "Lady Gaga", "Harry Styles", "Billie Eilish", "Bruno Mars", "Dua Lipa", "The Weeknd", "Miley Cyrus", "Rihanna", "Shakira", "Beyonce", "Britney Spears"],
+  hiphop: ["Eminem", "Dr. Dre", "Drake", "Kanye West", "Travis Scott", "Kendrick Lamar", "Post Malone", "Jay-Z", "Snoop Dogg", "Lil Wayne"]
+};
+
 export const SongQuiz: React.FC = () => {
   const { recordGameResult } = useStats();
   const [selectedCategory, setSelectedCategory] = useState<typeof CATEGORIES[0] | null>(null);
@@ -52,8 +59,13 @@ export const SongQuiz: React.FC = () => {
     setAudioError(false);
 
     try {
-      // Fetch tracks based on the category's query
-      const fetched = await searchTracks(category.query);
+      // Pick 3 random artists from the category to avoid repeating or noisy results
+      const artists = CATEGORY_ARTISTS[category.id] || CATEGORY_ARTISTS.all_time;
+      const selected = [...artists].sort(() => Math.random() - 0.5).slice(0, 3);
+      const query = selected.map(a => `"${a}"`).join(" OR ");
+
+      // Fetch tracks based on the category's smart query
+      const fetched = await searchTracks(query);
       
       // Shuffle and take 5 tracks with unique artists
       const shuffled = filterUniqueArtists([...fetched].sort(() => Math.random() - 0.5), 5);
@@ -79,7 +91,11 @@ export const SongQuiz: React.FC = () => {
     if (!selectedCategory) return;
     setLoading(true);
     try {
-      const fetched = await searchTracks(selectedCategory.query);
+      const artists = CATEGORY_ARTISTS[selectedCategory.id] || CATEGORY_ARTISTS.all_time;
+      const selected = [...artists].sort(() => Math.random() - 0.5).slice(0, 3);
+      const query = selected.map(a => `"${a}"`).join(" OR ");
+
+      const fetched = await searchTracks(query);
       if (fetched && fetched.length > 0) {
         const ids = new Set(tracks.map(t => t.id));
         const newTrack = fetched.find(t => !ids.has(t.id)) || fetched[Math.floor(Math.random() * fetched.length)];

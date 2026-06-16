@@ -320,6 +320,7 @@ export const POPULAR_SEARCHES = [
 // Try multiple free CORS proxies in order of reliability
 const PROXIES = [
   (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
   (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
 ];
 
@@ -404,37 +405,16 @@ export function filterUniqueArtists(tracks: Track[], count: number): Track[] {
 
 export async function getRandomTracks(count: number = 20): Promise<Track[]> {
   try {
-    const searchPool = [
-      ...POPULAR_SEARCHES,
-      "hits", "classics", "pop", "rock", "dance", "love", "best",
-      "reggae", "80s", "90s", "2000s", "alternative", "disco", "indie"
-    ];
+    // Pick 3 random popular artists
+    const shuffledArtists = [...POPULAR_SEARCHES].sort(() => Math.random() - 0.5);
+    const selectedArtists = shuffledArtists.slice(0, 3);
     
-    // Pick two random query terms
-    const q1 = searchPool[Math.floor(Math.random() * searchPool.length)];
-    let q2 = searchPool[Math.floor(Math.random() * searchPool.length)];
-    while (q2 === q1) {
-      q2 = searchPool[Math.floor(Math.random() * searchPool.length)];
-    }
+    // Combine them with OR in a single query
+    const query = selectedArtists.map(a => `"${a}"`).join(" OR ");
+    const tracks = await searchTracks(query);
 
-    const tracks1 = await searchTracks(q1);
-    let tracks2: Track[] = [];
-    try {
-      // Fetch second query sequentially
-      tracks2 = await searchTracks(q2);
-    } catch (e) {
-      console.warn("Second search query failed", e);
-    }
-
-    const combined = [...tracks1, ...tracks2];
-    
-    // Filter duplicates
-    const uniqueTracksMap = new Map<number, Track>();
-    combined.forEach(t => uniqueTracksMap.set(t.id, t));
-    const uniqueTracks = Array.from(uniqueTracksMap.values());
-
-    if (uniqueTracks.length > 0) {
-      return filterUniqueArtists(shuffleArray(uniqueTracks), count);
+    if (tracks && tracks.length > 0) {
+      return filterUniqueArtists(shuffleArray(tracks), count);
     }
     return filterUniqueArtists(shuffleArray([...FALLBACK_TRACKS]), count);
   } catch (error) {
