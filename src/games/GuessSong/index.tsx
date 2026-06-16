@@ -140,9 +140,16 @@ export const GuessSong: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-slate-400">A carregar músicas...</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
+        <div className="relative w-24 h-24 rounded-full bg-slate-900 border-4 border-slate-800 flex items-center justify-center shadow-2xl animate-spin" style={{ animationDuration: '3s' }}>
+          <div className="w-8 h-8 rounded-full bg-blue-500 border-2 border-slate-900 flex items-center justify-center">
+            <div className="w-2 h-2 rounded-full bg-slate-900" />
+          </div>
+          <div className="absolute inset-2 rounded-full border border-dashed border-slate-700/40" />
+          <div className="absolute inset-4 rounded-full border border-dashed border-slate-700/30" />
+          <div className="absolute inset-6 rounded-full border border-dashed border-slate-700/20" />
+        </div>
+        <p className="text-slate-400 font-semibold animate-pulse text-sm">A carregar músicas...</p>
       </div>
     );
   }

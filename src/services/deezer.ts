@@ -345,23 +345,28 @@ export async function searchTracks(query: string): Promise<Track[]> {
 
 export async function getRandomTracks(count: number = 20): Promise<Track[]> {
   try {
-    const selectedQueries = shuffleArray([...POPULAR_SEARCHES]).slice(0, count);
-    const promises = selectedQueries.map(q => 
-      searchTracks(q)
-        .then(results => (results && results.length > 0 ? results[Math.floor(Math.random() * Math.min(results.length, 5))] : null))
-        .catch(() => null)
-    );
-    const results = await Promise.all(promises);
-    const validTracks = results.filter((t): t is Track => t !== null && t !== undefined);
+    // Select 3 random search queries from popular list to avoid overloading proxies
+    const queries = shuffleArray([...POPULAR_SEARCHES]).slice(0, 3);
+    const promises = queries.map(q => searchTracks(q).catch(() => []));
+    const searchResults = await Promise.all(promises);
     
-    if (validTracks.length >= count) {
-      return shuffleArray(validTracks).slice(0, count);
+    // Flat map results, filter, and shuffle
+    const pool = shuffleArray(searchResults.flat());
+    
+    // De-duplicate by ID
+    const uniqueMap = new Map<number, Track>();
+    pool.forEach(t => uniqueMap.set(t.id, t));
+    
+    const uniqueTracks = Array.from(uniqueMap.values());
+    if (uniqueTracks.length >= count) {
+      return uniqueTracks.slice(0, count);
     }
     
-    const combined = [...validTracks, ...shuffleArray([...FALLBACK_TRACKS])];
-    const uniqueMap = new Map<number, Track>();
-    combined.forEach(t => uniqueMap.set(t.id, t));
-    return Array.from(uniqueMap.values()).slice(0, count);
+    // Fall back using local data if needed
+    const combined = [...uniqueTracks, ...shuffleArray([...FALLBACK_TRACKS])];
+    const finalUniqueMap = new Map<number, Track>();
+    combined.forEach(t => finalUniqueMap.set(t.id, t));
+    return Array.from(finalUniqueMap.values()).slice(0, count);
   } catch (error) {
     return shuffleArray([...FALLBACK_TRACKS]).slice(0, count);
   }
