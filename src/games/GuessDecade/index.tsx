@@ -77,6 +77,14 @@ export const GuessDecade: React.FC = () => {
 
   const currentTrack = tracks[currentTrackIndex];
 
+  if (!currentTrack && !loading) {
+    return (
+      <div className="text-center text-slate-400 py-12 animate-fade-in">
+        Nenhuma música disponível. Tente voltar ao menu ou reiniciar.
+      </div>
+    );
+  }
+
   const getDecadeFromYear = (yearStr?: string): string => {
     if (!yearStr) return '2010s';
     const year = parseInt(yearStr.split('-')[0]);

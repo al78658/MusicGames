@@ -378,6 +378,46 @@ export async function searchTracks(query: string): Promise<Track[]> {
   }
 }
 
+export async function getChartTracks(genreId: number): Promise<Track[]> {
+  try {
+    const endpoint = genreId === 0 
+      ? 'https://api.deezer.com/chart/0/tracks' 
+      : `https://api.deezer.com/chart/${genreId}/tracks`;
+      
+    const data = await fetchWithProxy(endpoint);
+    const tracksList = data && Array.isArray(data.data) ? data.data : (data && data.tracks && Array.isArray(data.tracks.data) ? data.tracks.data : null);
+
+    if (tracksList) {
+      return tracksList
+        .filter((track: any) => track.preview && typeof track.preview === 'string' && track.preview.trim() !== '')
+        .map((track: any) => ({
+          id: track.id,
+          title: track.title,
+          title_short: track.title_short || track.title,
+          artist: {
+            id: track.artist?.id || 0,
+            name: track.artist?.name || 'Artista Desconhecido',
+            picture_medium: track.artist?.picture_medium || ''
+          },
+          album: {
+            id: track.album?.id || 0,
+            title: track.album?.title || 'Álbum Desconhecido',
+            cover_medium: track.album?.cover_medium || ''
+          },
+          preview: track.preview,
+          duration: track.duration,
+          rank: track.rank || 0,
+          release_date: getReleaseDateForArtist(track.artist?.name || '', track.title),
+          genres: getGenresForArtist(track.artist?.name || '')
+        }));
+    }
+    return shuffleArray([...FALLBACK_TRACKS]).slice(0, 15);
+  } catch (error) {
+    console.warn(`Deezer chart fetch failed for ${genreId}, falling back`, error);
+    return shuffleArray([...FALLBACK_TRACKS]).slice(0, 15);
+  }
+}
+
 export function filterUniqueArtists(tracks: Track[], count: number): Track[] {
   const unique: Track[] = [];
   const seen = new Set<string>();

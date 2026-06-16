@@ -76,6 +76,14 @@ export const GuessArtist: React.FC = () => {
 
   const currentTrack = tracks[currentTrackIndex];
 
+  if (!currentTrack && !loading) {
+    return (
+      <div className="text-center text-slate-400 py-12 animate-fade-in">
+        Nenhuma música disponível. Tente voltar ao menu ou reiniciar.
+      </div>
+    );
+  }
+
   const handleRevealHint = (type: 'title' | 'year' | 'genre') => {
     if (!hintsUsed.includes(type)) {
       setHintsUsed([...hintsUsed, type]);

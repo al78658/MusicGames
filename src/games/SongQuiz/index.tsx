@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getRandomTracks, searchTracks, filterUniqueArtists } from '../../services/deezer';
+import { getRandomTracks, getChartTracks, filterUniqueArtists } from '../../services/deezer';
 import type { Track } from '../../types';
 import { AudioPlayer } from '../../components/AudioPlayer';
 import { ScoreDisplay } from '../../components/ScoreDisplay';
@@ -7,18 +7,11 @@ import { useStats } from '../../contexts/StatsContext';
 import { HelpCircle, CheckCircle, XCircle, ArrowRight, Eye, Music, Radio, Flame, Sparkles } from 'lucide-react';
 
 const CATEGORIES = [
-  { id: 'all_time', name: 'All Time Bests', desc: 'Os maiores êxitos de sempre a nível global.', icon: Sparkles, query: 'hits' },
-  { id: 'rock', name: 'Rock & Metal', desc: 'Clássicos da guitarra, grunge, heavy metal e rock alternativo.', icon: Flame, query: 'rock' },
-  { id: 'pop', name: 'Pop & Dance', desc: 'As músicas pop mais cativantes e ritmos de pista de dança.', icon: Music, query: 'pop' },
-  { id: 'hiphop', name: 'Hip-Hop & Rap', desc: 'Grandes batidas, flow marcante e rimas clássicas.', icon: Radio, query: 'rap' }
+  { id: 'all_time', name: 'All Time Bests', desc: 'Os maiores êxitos de sempre a nível global.', icon: Sparkles, genreId: 0 },
+  { id: 'rock', name: 'Rock & Metal', desc: 'Clássicos da guitarra, grunge, heavy metal e rock alternativo.', icon: Flame, genreId: 113 },
+  { id: 'pop', name: 'Pop & Dance', desc: 'As músicas pop mais cativantes e ritmos de pista de dança.', icon: Music, genreId: 132 },
+  { id: 'hiphop', name: 'Hip-Hop & Rap', desc: 'Grandes batidas, flow marcante e rimas clássicas.', icon: Radio, genreId: 116 }
 ];
-
-const CATEGORY_ARTISTS: Record<string, string[]> = {
-  all_time: ["Michael Jackson", "Queen", "Nirvana", "Adele", "Coldplay", "The Weeknd", "Harry Styles", "Taylor Swift", "Bruno Mars", "Ed Sheeran", "David Bowie", "Led Zeppelin", "AC/DC", "Beatles", "Pink Floyd"],
-  rock: ["AC/DC", "Metallica", "Queen", "Nirvana", "Guns N' Roses", "Linkin Park", "Led Zeppelin", "Pink Floyd", "Bon Jovi", "Red Hot Chili Peppers", "Green Day", "Gorillaz", "Scorpions"],
-  pop: ["Katy Perry", "Taylor Swift", "Ed Sheeran", "Lady Gaga", "Harry Styles", "Billie Eilish", "Bruno Mars", "Dua Lipa", "The Weeknd", "Miley Cyrus", "Rihanna", "Shakira", "Beyonce", "Britney Spears"],
-  hiphop: ["Eminem", "Dr. Dre", "Drake", "Kanye West", "Travis Scott", "Kendrick Lamar", "Post Malone", "Jay-Z", "Snoop Dogg", "Lil Wayne"]
-};
 
 export const SongQuiz: React.FC = () => {
   const { recordGameResult } = useStats();
@@ -59,13 +52,8 @@ export const SongQuiz: React.FC = () => {
     setAudioError(false);
 
     try {
-      // Pick 3 random artists from the category to avoid repeating or noisy results
-      const artists = CATEGORY_ARTISTS[category.id] || CATEGORY_ARTISTS.all_time;
-      const selected = [...artists].sort(() => Math.random() - 0.5).slice(0, 3);
-      const query = selected.map(a => `"${a}"`).join(" OR ");
-
-      // Fetch tracks based on the category's smart query
-      const fetched = await searchTracks(query);
+      // Fetch tracks based on the category's genre ID
+      const fetched = await getChartTracks(category.genreId);
       
       // Shuffle and take 5 tracks with unique artists
       const shuffled = filterUniqueArtists([...fetched].sort(() => Math.random() - 0.5), 5);
@@ -91,11 +79,7 @@ export const SongQuiz: React.FC = () => {
     if (!selectedCategory) return;
     setLoading(true);
     try {
-      const artists = CATEGORY_ARTISTS[selectedCategory.id] || CATEGORY_ARTISTS.all_time;
-      const selected = [...artists].sort(() => Math.random() - 0.5).slice(0, 3);
-      const query = selected.map(a => `"${a}"`).join(" OR ");
-
-      const fetched = await searchTracks(query);
+      const fetched = await getChartTracks(selectedCategory.genreId);
       if (fetched && fetched.length > 0) {
         const ids = new Set(tracks.map(t => t.id));
         const newTrack = fetched.find(t => !ids.has(t.id)) || fetched[Math.floor(Math.random() * fetched.length)];
@@ -120,6 +104,14 @@ export const SongQuiz: React.FC = () => {
   };
 
   const currentTrack = tracks[currentTrackIndex];
+
+  if (gameState !== 'category_select' && !currentTrack && !loading) {
+    return (
+      <div className="text-center text-slate-400 py-12">
+        Nenhuma música disponível. Tente voltar ao menu.
+      </div>
+    );
+  }
 
   const handleRevealHint = (type: 'artist' | 'year' | 'album') => {
     if (!hintsUsed.includes(type)) {
