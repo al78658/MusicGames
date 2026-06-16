@@ -290,9 +290,13 @@ export const MusicDNA: React.FC = () => {
         <AudioPlayer src={currentTrack.preview} autoPlay={true} />
 
         <div className="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col items-center">
-          <h3 className="text-lg font-bold text-slate-200 mb-6 text-center">
+          <h3 className="text-lg font-bold text-slate-200 mb-2 text-center">
             Gostas desta música?
           </h3>
+          <div className="text-center mb-6">
+            <h4 className="font-extrabold text-xl text-blue-400 truncate max-w-md">{currentTrack.title}</h4>
+            <p className="text-sm text-slate-400 font-semibold">{currentTrack.artist.name}</p>
+          </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 w-full">
             {RESPONSE_OPTIONS.map(opt => (

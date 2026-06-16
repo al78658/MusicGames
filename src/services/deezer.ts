@@ -488,5 +488,25 @@ function getGenresForArtist(artistName: string): string[] {
     "Guns N' Roses": ["Rock", "Hard Rock"]
   };
 
-  return genresMap[artistName] || ["Pop"];
+  if (genresMap[artistName]) return genresMap[artistName];
+
+  // Deterministic hash-based genre assignment
+  const genresPool = [
+    ["Pop"],
+    ["Rock"],
+    ["Hip-Hop"],
+    ["Dance"],
+    ["Indie"],
+    ["Soul"],
+    ["Metal"],
+    ["Alternative"]
+  ];
+  
+  let hash = 0;
+  for (let i = 0; i < artistName.length; i++) {
+    hash = artistName.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  const index = Math.abs(hash) % genresPool.length;
+  return genresPool[index];
 }
