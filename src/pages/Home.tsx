@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useStats } from '../contexts/StatsContext';
-import { Music, Trophy, Play, Star, List, Calendar, Flame, Zap, RefreshCw, BarChart2 } from 'lucide-react';
+import { Music, Trophy, Play, Star, List, Calendar, Flame, Zap, RefreshCw, BarChart2, Hourglass } from 'lucide-react';
 
 const GAME_MODES = [
   {
@@ -11,6 +11,14 @@ const GAME_MODES = [
     color: 'from-blue-600 to-indigo-600 text-blue-400 border-blue-500/20',
     icon: Music,
     path: '/game/guess-song'
+  },
+  {
+    id: 'incremental_challenge',
+    title: 'Desafio Incremental',
+    description: 'Adivinha com trechos progressivos: 1s, 3s, 5s e 10s. Falhar a última significa perder!',
+    color: 'from-indigo-600 via-purple-600 to-pink-600 text-purple-400 border-purple-500/20',
+    icon: Hourglass,
+    path: '/game/incremental-challenge'
   },
   {
     id: 'guess_artist',
