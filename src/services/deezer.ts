@@ -343,12 +343,23 @@ export async function searchTracks(query: string): Promise<Track[]> {
 
 export async function getRandomTracks(count: number = 20): Promise<Track[]> {
   try {
-    const randomQuery = POPULAR_SEARCHES[Math.floor(Math.random() * POPULAR_SEARCHES.length)];
-    const tracks = await searchTracks(randomQuery);
-    if (tracks.length > 0) {
-      return shuffleArray(tracks).slice(0, count);
+    const selectedQueries = shuffleArray([...POPULAR_SEARCHES]).slice(0, count);
+    const promises = selectedQueries.map(q => 
+      searchTracks(q)
+        .then(results => (results && results.length > 0 ? results[Math.floor(Math.random() * Math.min(results.length, 5))] : null))
+        .catch(() => null)
+    );
+    const results = await Promise.all(promises);
+    const validTracks = results.filter((t): t is Track => t !== null && t !== undefined);
+    
+    if (validTracks.length >= count) {
+      return shuffleArray(validTracks).slice(0, count);
     }
-    return shuffleArray([...FALLBACK_TRACKS]).slice(0, count);
+    
+    const combined = [...validTracks, ...shuffleArray([...FALLBACK_TRACKS])];
+    const uniqueMap = new Map<number, Track>();
+    combined.forEach(t => uniqueMap.set(t.id, t));
+    return Array.from(uniqueMap.values()).slice(0, count);
   } catch (error) {
     return shuffleArray([...FALLBACK_TRACKS]).slice(0, count);
   }

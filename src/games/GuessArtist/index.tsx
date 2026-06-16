@@ -68,14 +68,30 @@ export const GuessArtist: React.FC = () => {
       .trim();
   };
 
+  const isGuessCorrect = (userInput: string, answer: string): boolean => {
+    const normGuess = normalizeString(userInput);
+    const normAnswer = normalizeString(answer);
+    
+    if (normGuess === normAnswer) return true;
+    
+    const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'o', 'os', 'as', 'de', 'do', 'da', 'em', 'um', 'uma', 'to', 'for', 'of', 'in', 'on', 'with', 'by']);
+    
+    const guessWords = normGuess.split(' ').filter(w => w.length > 1 && !stopWords.has(w));
+    const answerWords = normAnswer.split(' ').filter(w => w.length > 1 && !stopWords.has(w));
+    
+    if (guessWords.length === 0 || answerWords.length === 0) return false;
+    
+    return guessWords.some(gWord => answerWords.includes(gWord)) || 
+           answerWords.some(aWord => guessWords.includes(aWord));
+  };
+
   const handleGuessSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!guess.trim() || gameState !== 'playing') return;
 
     setTimerActive(false);
     const correctArtist = currentTrack.artist.name;
-    const isCorrect = normalizeString(guess).includes(normalizeString(correctArtist)) || 
-                      normalizeString(correctArtist).includes(normalizeString(guess));
+    const isCorrect = isGuessCorrect(guess, correctArtist);
 
     let pointsGained = 0;
     if (isCorrect) {

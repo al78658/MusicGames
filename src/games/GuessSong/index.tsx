@@ -68,18 +68,33 @@ export const GuessSong: React.FC = () => {
       .trim();
   };
 
+  const isGuessCorrect = (userInput: string, answer: string): boolean => {
+    const normGuess = normalizeString(userInput);
+    const normAnswer = normalizeString(answer);
+    
+    if (normGuess === normAnswer) return true;
+    
+    const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'o', 'os', 'as', 'de', 'do', 'da', 'em', 'um', 'uma', 'to', 'for', 'of', 'in', 'on', 'with', 'by']);
+    
+    const guessWords = normGuess.split(' ').filter(w => w.length > 1 && !stopWords.has(w));
+    const answerWords = normAnswer.split(' ').filter(w => w.length > 1 && !stopWords.has(w));
+    
+    if (guessWords.length === 0 || answerWords.length === 0) return false;
+    
+    return guessWords.some(gWord => answerWords.includes(gWord)) || 
+           answerWords.some(aWord => guessWords.includes(aWord));
+  };
+
   const handleGuessSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!guess.trim() || gameState !== 'playing') return;
 
     setTimerActive(false);
     const correctTitle = currentTrack.title_short || currentTrack.title;
-    const isCorrect = normalizeString(guess).includes(normalizeString(correctTitle)) || 
-                      normalizeString(correctTitle).includes(normalizeString(guess));
+    const isCorrect = isGuessCorrect(guess, correctTitle);
 
     let pointsGained = 0;
     if (isCorrect) {
-      // Points formula: 100 base, -5 points per second (up to 30s max deduction), -20 points per hint used
       const timeDeduction = Math.min(seconds * 2, 50);
       const hintDeduction = hintsUsed.length * 20;
       pointsGained = Math.max(10, 100 - timeDeduction - hintDeduction);
