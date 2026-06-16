@@ -9,6 +9,7 @@ import { TimelineChallenge } from './games/TimelineChallenge';
 import { PopularityRanking } from './games/PopularityRanking';
 import { GuessDecade } from './games/GuessDecade';
 import { MusicDNA } from './games/MusicDNA';
+import { SongQuiz } from './games/SongQuiz';
 import { Music, ArrowLeft } from 'lucide-react';
 
 const Header: React.FC = () => {
@@ -72,6 +73,7 @@ function App() {
               <Route path="/game/popularity-ranking" element={<PopularityRanking />} />
               <Route path="/game/guess-decade" element={<GuessDecade />} />
               <Route path="/game/music-dna" element={<MusicDNA />} />
+              <Route path="/game/song-quiz" element={<SongQuiz />} />
             </Routes>
           </main>
           <Footer />

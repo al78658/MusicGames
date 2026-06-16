@@ -1,9 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useStats } from '../contexts/StatsContext';
-import { Music, Trophy, Play, Star, List, Calendar, Flame, Zap, RefreshCw, BarChart2 } from 'lucide-react';
+import { Music, Trophy, Play, Star, List, Calendar, Flame, Zap, RefreshCw, BarChart2, Sparkles } from 'lucide-react';
 
 const GAME_MODES = [
+  {
+    id: 'song_quiz',
+    title: 'Desafio Temático',
+    description: 'Escolhe um tema (All Time Bests, Rock, Pop ou Hip-Hop) e adivinha as canções.',
+    color: 'from-blue-600 via-indigo-600 to-purple-600 text-indigo-400 border-indigo-500/20',
+    icon: Sparkles,
+    path: '/game/song-quiz'
+  },
   {
     id: 'guess_song',
     title: 'Guess the Song',
@@ -93,7 +101,7 @@ export const Home: React.FC = () => {
         </p>
 
         <Link
-          to="/game/guess-song"
+          to="/game/song-quiz"
           className="mt-6 px-8 py-3.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl font-bold flex items-center gap-2.5 shadow-xl hover:shadow-indigo-500/20 transition-all duration-300 hover:scale-103 active:scale-98"
         >
           <Play className="w-5 h-5 fill-white" />
